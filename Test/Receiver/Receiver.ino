@@ -1,23 +1,25 @@
-#include <RH_ASK.h>
+#include "Manchester.h"
 
-RH_ASK driver;
+#define RX_PIN D2
 
-void setup()
-{
-    Serial.begin(9600);	// Debugging only
-    if (!driver.init())
-         Serial.println("init failed");
+#define BUFFER_SIZE 4
+uint8_t buffer[BUFFER_SIZE];
+
+void setup() {
+  Serial.begin(19200);
+  man.setupReceive(RX_PIN, MAN_1200);
+  man.beginReceiveArray(BUFFER_SIZE, buffer);
 }
 
-void loop()
-{
-    uint8_t buf[12];
-    uint8_t buflen = sizeof(buf);
-    if (driver.recv(buf, &buflen)) // Non-blocking
-    {
-      int i;
-      // Message with a good checksum received, dump it.
-      Serial.print("Message: ");
-      Serial.println((char*)buf);         
-    }
+void loop() {
+  if (man.receiveComplete()) {
+    uint8_t receivedSize = buffer[0];
+    for(uint8_t i=1; i<receivedSize; i++)
+      Serial.print(buffer[i]);
+      Serial.print(',');
+    
+    Serial.println();
+
+    man.beginReceiveArray(BUFFER_SIZE, buffer);
+  }
 }

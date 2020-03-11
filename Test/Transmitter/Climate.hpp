@@ -11,11 +11,12 @@ class Climate {
 		ForcedClimate & climateSensor;
 		ManchesterTransmitter & transmitter;
 
-		unsigned long lastUpdate = 0;
-		uint16_t updatePeriod;
+		unsigned long lastUpdateCycles = 0;
+		uint16_t updateCycles;
 	public:
-		Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint16_t & updatePeriod = 20000);
+		Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint16_t & updateCycles = 5);
 
+		void begin();
 		void operator()();
 };
 

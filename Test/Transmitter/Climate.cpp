@@ -1,15 +1,21 @@
 #include "Climate.hpp"
 
-Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint16_t & updatePeriod):
+Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint16_t & updateCycles):
 	climateSensor(climateSensor),
 	transmitter(transmitter),
-	updatePeriod(updatePeriod)
+	updateCycles(updateCycles)
 {}
 
 void Climate::operator()(){
-	if(millis() - lastUpdate > updatePeriod){
+	// Millis() wouls be of great use here, I know... But it doesn't work and saves some more memory.
+	if(++lastUpdateCycles > updateCycles){
 		climateSensor.takeForcedMeasurement();
 		transmitter.updateClimate(climateSensor.getTemperature(), climateSensor.getHumidity(), climateSensor.getPressure());
-		lastUpdate = millis();
+		lastUpdateCycles = 0;
 	}
+}
+
+void Climate::begin(){
+	climateSensor.takeForcedMeasurement();
+	transmitter.updateClimate(climateSensor.getTemperature(), climateSensor.getHumidity(), climateSensor.getPressure());
 }

@@ -13,25 +13,29 @@
 #include "Climate.hpp"
 #include "manchesterTransmitter.hpp"
 
+const uint8_t sda = 0;
+const uint8_t scl = 2;
 const uint8_t transmitPin = PIN_B4;
 const uint8_t pirPin = PCINT1;
 
 ManchesterTransmitter transmitter = ManchesterTransmitter(1, transmitPin, MAN_1200);
 PassiveInfrared pirSensor = PassiveInfrared(pirPin, transmitter);
-// ForcedClimate bme = ForcedClimate(Wire, 0x76);
-// Climate climateSensor = Climate(bme, transmitter);
+ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
+Climate climateSensor = Climate(bme, transmitter);
 
 ISR(PCINT0_vect){
 	pirSensor.sensedMotion();
 }
 
 void setup() {
-	
+	TinyWireM.begin();
+	bme.begin();
+	climateSensor.begin();
 }
 
 void loop() {
 	pirSensor();
-	// climateSensor();
+	climateSensor();
 	transmitter();
 
 	setup_watchdog(9);						// Trigger after 8 seconds.
