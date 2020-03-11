@@ -2,7 +2,7 @@
 
 #define RX_PIN D2
 
-#define BUFFER_SIZE 4
+#define BUFFER_SIZE 11
 uint8_t buffer[BUFFER_SIZE];
 
 void setup() {
@@ -13,12 +13,24 @@ void setup() {
 
 void loop() {
   if (man.receiveComplete()) {
-    uint8_t receivedSize = buffer[0];
-    for(uint8_t i=1; i<receivedSize; i++)
-      Serial.print(buffer[i]);
-      Serial.print(',');
-    
-    Serial.println();
+    Serial.print("Buffersize: ");
+    Serial.print(buffer[0]);
+    Serial.print(", id: ");
+    Serial.print(buffer[1]);
+    Serial.print(", motion: ");
+    Serial.print(buffer[2]);
+
+    Serial.print(", temperature: ");
+    int16_t temperature = buffer[3] + (buffer[4] << 8);
+    Serial.print(temperature);
+
+    Serial.print(", humidity: ");
+    int16_t humidity = buffer[5] + (buffer[6] << 8);
+    Serial.print(humidity);
+
+    Serial.print(", pressure: ");
+    int32_t pressure = buffer[7] + ((buffer[8] << 8) + ((buffer[9] << 16) + (buffer[10] << 24)));
+    Serial.println(pressure);
 
     man.beginReceiveArray(BUFFER_SIZE, buffer);
   }
