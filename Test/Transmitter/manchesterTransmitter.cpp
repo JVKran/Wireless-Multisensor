@@ -17,8 +17,8 @@ void ManchesterTransmitter::operator()(){
 void ManchesterTransmitter::transmitData(){
 	// uint8_t bufferSize = 9;
 	// uint8_t data[bufferSize] = {bufferSize, id, lastMotion, (lastTemperature & 0xF0) >> 8, lastTemperature & 0x0F, (lastHumidity & 0xF0) >> 8, lastHumidity & 0x0F, (lastPressure & 0xF0) >> 8, lastPressure & 0x0F};
-	uint8_t bufferSize = 4;
-	uint8_t data[bufferSize] = {bufferSize, id, lastMotion, lastTemperature/10};
+	uint8_t bufferSize = 11;
+	uint8_t data[bufferSize] = {bufferSize, id, lastMotion, lastTemperature & 0x00FF, lastTemperature >> 8, lastHumidity & 0x00FF, lastHumidity >> 8, lastPressure & 0x00FF, lastPressure >> 8, lastPressure >> 16, lastPressure >> 24};
 	man.transmitArray(bufferSize, data);
 }
 
@@ -27,7 +27,7 @@ void ManchesterTransmitter::updateMotion(){
 	dataChanged = true;
 }
 
-void ManchesterTransmitter::updateClimate(const int16_t temperature, const int16_t humidity, const int16_t pressure){
+void ManchesterTransmitter::updateClimate(const int16_t temperature, const int16_t humidity, const int32_t pressure){
 	lastTemperature = temperature;
 	lastHumidity = humidity;
 	lastPressure = pressure;

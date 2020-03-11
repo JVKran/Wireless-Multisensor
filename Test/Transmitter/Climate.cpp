@@ -17,5 +17,6 @@ void Climate::operator()(){
 
 void Climate::begin(){
 	climateSensor.takeForcedMeasurement();
+	delay(5);
 	transmitter.updateClimate(climateSensor.getTemperature(), climateSensor.getHumidity(), climateSensor.getPressure());
 }
