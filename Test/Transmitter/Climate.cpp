@@ -1,9 +1,9 @@
 #include "Climate.hpp"
 
-Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint16_t & updateCycles):
+Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint32_t & updatePeriod):
 	climateSensor(climateSensor),
 	transmitter(transmitter),
-	updateCycles(updateCycles)
+	updateCycles(updatePeriod / 8000)		// Wakes up at least every 8 seconds.
 {}
 
 void Climate::operator()(){
