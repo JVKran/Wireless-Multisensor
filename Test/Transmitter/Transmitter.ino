@@ -43,24 +43,26 @@ const uint8_t pirPin = PCINT1;
 ManchesterTransmitter transmitter = ManchesterTransmitter(1, transmitPin, MAN_1200);
 PassiveInfrared pirSensor = PassiveInfrared(pirPin, transmitter);
 ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
-Climate climateSensor = Climate(bme, transmitter, CLM_5MIN);		// Transmit climate data every 5 minutes.
+Climate climateSensor = Climate(bme, transmitter, CLM_5MIN);
+PowerManagement power = PowerManagement(transmitter);
 
 ISR(PCINT0_vect){
 	pirSensor.sensedMotion();
 }
 
 void setup() {
-	pinMode(PIN_B3, INPUT_PULLUP);
 	TinyWireM.begin();
 	bme.begin();
 	climateSensor.begin();
+	power.begin();
 }
 
 void loop() {
 	pirSensor();
 	climateSensor();
+	power();
 	transmitter();
 
-	setup_watchdog(9);						// Trigger after 8 seconds.
-	sleep();
+	power.setup_watchdog(9);						// Trigger after 8 seconds.
+	power.sleep();
 }
