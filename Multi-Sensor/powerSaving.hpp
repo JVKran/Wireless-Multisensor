@@ -11,26 +11,23 @@
 #include "manchesterTransmitter.hpp"
 
 #define PM_HOUR 3600000
+#define PM_8SEC 9
 
 class PowerManagement {
 	private:
 		ManchesterTransmitter & transmitter;
 
-		unsigned long updatePeriod;
-		unsigned long lastUpdate;
+		uint16_t updateCycles;
+		uint16_t lastUpdateCycles;
 	public:
 		PowerManagement(ManchesterTransmitter & transmitter, const unsigned long updatePeriod = PM_HOUR);
+		void begin();
 
-		void begin(){
-			transmitter.updateVoltage(readVoltage());
-		}
-
-		void sleep();
+		void sleep(int timerPrescaler = 0);
 		void set_adc(const bool state);
 		void setup_watchdog(int timerPrescaler);
 
 		uint16_t readVoltage();
-
 		void operator()();
 };
 

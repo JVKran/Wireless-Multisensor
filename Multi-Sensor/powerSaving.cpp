@@ -2,12 +2,17 @@
 
 PowerManagement::PowerManagement(ManchesterTransmitter & transmitter, const unsigned long updatePeriod):
 	transmitter(transmitter),
-	updatePeriod(updatePeriod)
-{
-	// transmitter.updateVoltage(readVoltage());
+	updateCycles(updatePeriod / 8000)
+{}
+
+void PowerManagement::begin(){
+	transmitter.updateVoltage(readVoltage());
 }
 
-void PowerManagement::sleep(){
+void PowerManagement::sleep(int timerPrescaler){
+	if(timerPrescaler){
+		setup_watchdog(timerPrescaler);
+	}
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	set_adc(false);            				// Turn off ADC (saves ~230uA).
 	power_all_disable();  					// Power off ADC, Timer 0 and 1 and the serial interface.
@@ -70,9 +75,9 @@ uint16_t PowerManagement::readVoltage(){
 }
 
 void PowerManagement::operator()(){
-	if(millis() - lastUpdate > updatePeriod){
+	if(++lastUpdateCycles > updateCycles){
 		transmitter.updateVoltage(readVoltage());
-		lastUpdate = millis();
+		lastUpdateCycles = 0;
 	}
 }
 

@@ -35,12 +35,13 @@ forget to burn the bootloader with these changed parameters!
 #include "Climate.hpp"
 #include "manchesterTransmitter.hpp"
 
-const uint8_t sda = 0;
-const uint8_t scl = 2;
-const uint8_t transmitPin = PIN_B4;
-const uint8_t pirPin = PCINT1;
+const uint8_t sda 			= PIN_B0;
+const uint8_t scl 			= PIN_B2;
+const uint8_t transmitPin 	= PIN_B4;
+const uint8_t pirPin 		= PCINT1;
+const uint8_t multiSensorId = 1;
 
-ManchesterTransmitter transmitter = ManchesterTransmitter(1, transmitPin, MAN_1200);
+ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId, transmitPin, MAN_1200);
 PassiveInfrared pirSensor = PassiveInfrared(pirPin, transmitter);
 ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
 Climate climateSensor = Climate(bme, transmitter, CLM_5MIN);
@@ -58,11 +59,11 @@ void setup() {
 }
 
 void loop() {
-	pirSensor();
-	climateSensor();
+	pirSensor();		// Handle the possible occurence of an interrupt.
+	climateSensor();	
 	power();
+
 	transmitter();
 
-	power.setup_watchdog(9);						// Trigger after 8 seconds.
-	power.sleep();
+	power.sleep(PM_8SEC);		// Sleep for 8 seconds or shorter when an interrupt occurs.
 }

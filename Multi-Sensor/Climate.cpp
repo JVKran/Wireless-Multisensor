@@ -7,7 +7,7 @@ Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmit
 {}
 
 void Climate::operator()(){
-	// Millis() wouls be of great use here, I know... But it doesn't work and saves some more memory.
+	// Millis() wouls be of great use here, I know... But it saves some flash memory!
 	if(++lastUpdateCycles > updateCycles){
 		climateSensor.takeForcedMeasurement();
 		transmitter.updateClimate(climateSensor.getTemperature(), climateSensor.getHumidity(), climateSensor.getPressure());

@@ -2,11 +2,10 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-// Update these with values suitable for your network.
-
-const char* ssid = "KraanBast2.4";
-const char* password = "Snip238!";
-const char* mqtt_server = "192.168.178.81";
+// Replace these with values suitable for your network.
+const char* ssid = "SSID";
+const char* password = "WPA";
+const char* mqtt_server = "MQTT-Broker-IP";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
