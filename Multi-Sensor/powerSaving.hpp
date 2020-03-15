@@ -18,7 +18,7 @@ class PowerManagement {
 		ManchesterTransmitter & transmitter;
 
 		uint16_t updateCycles;
-		uint16_t lastUpdateCycles;
+		uint16_t lastUpdateCycles = 0;
 	public:
 		PowerManagement(ManchesterTransmitter & transmitter, const unsigned long updatePeriod = PM_HOUR);
 		void begin();

@@ -20,6 +20,9 @@ That's pretty impressive!
 Futhermore, it's very important to set the clock of the ATtiny at 8MHz internal
 and enable the Brownout Detection and set it at the corresponding voltage. Don't
 forget to burn the bootloader with these changed parameters!
+
+As another flash saving method, millis() can be disabled from te same dropdown
+menu.
 */
 
 #include <Manchester.h>			// 433MHz Manchester encoding
