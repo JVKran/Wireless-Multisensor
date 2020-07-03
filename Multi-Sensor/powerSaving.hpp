@@ -10,17 +10,15 @@
 #include <avr/wdt.h> 			// Needed to enable/disable watch dog timer
 #include "manchesterTransmitter.hpp"
 
-#define PM_HOUR 3600000
 #define PM_8SEC 9
 
 class PowerManagement {
 	private:
 		ManchesterTransmitter & transmitter;
 
-		uint16_t updateCycles;
-		uint16_t lastUpdateCycles = 0;
+		uint16_t lastVoltage;
 	public:
-		PowerManagement(ManchesterTransmitter & transmitter, const unsigned long updatePeriod = PM_HOUR);
+		PowerManagement(ManchesterTransmitter & transmitter);
 		void begin();
 
 		void sleep(int timerPrescaler = 0);

@@ -1,8 +1,7 @@
 #include "powerSaving.hpp"
 
-PowerManagement::PowerManagement(ManchesterTransmitter & transmitter, const unsigned long updatePeriod):
-	transmitter(transmitter),
-	updateCycles(updatePeriod / 8000)
+PowerManagement::PowerManagement(ManchesterTransmitter & transmitter):
+	transmitter(transmitter)
 {}
 
 void PowerManagement::begin(){
@@ -15,11 +14,18 @@ void PowerManagement::sleep(int timerPrescaler){
 	}
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	set_adc(false);            				// Turn off ADC (saves ~230uA).
+	#if defined(__AVR_ATmega328P__)
+		power_spi_disable();
+	#endif
 	power_all_disable();  					// Power off ADC, Timer 0 and 1 and the serial interface.
 	sleep_enable();
+	sleep_bod_disable();
+	sei(); //first instruction after SEI is guaranteed to execute before any interrupt
 	sleep_cpu();
+
 	sleep_disable();   
 	power_all_enable();    					// Power everything back on.
+	set_adc(true);   
 	wdt_disable();							// Prevent wakeup during being awake.
 }
 
@@ -51,33 +57,36 @@ void PowerManagement::setup_watchdog(int timerPrescaler) {
 }
 
 uint16_t PowerManagement::readVoltage(){
+	// Read 1.1V reference against AVcc
+	// set the reference to Vcc and the measurement to the internal 1.1V reference
 	#if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-		ADMUX = _BV(REFS0) | _BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+	ADMUX = _BV(REFS0) | _BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
 	#elif defined (__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
-		ADMUX = _BV(MUX5) | _BV(MUX0);
+	ADMUX = _BV(MUX5) | _BV(MUX0);
 	#elif defined (__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-		ADMUX = _BV(MUX3) | _BV(MUX2);
+	ADMUX = _BV(MUX3) | _BV(MUX2);
 	#else
-		ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
-	#endif
+	ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+	#endif 
 
-	delay(2); 								// Wait for the refrence voltage (Vref) to settle
-	ADCSRA |= _BV(ADSC); 					// Start conversion
-	while (bit_is_set(ADCSRA,ADSC)); 		// Measuring
+	delay(2); 							// Wait for Vref to settle
+	ADCSRA |= _BV(ADSC); 				// Start conversion
+	while (bit_is_set(ADCSRA,ADSC)); 	// measuring
 
-	uint8_t low  = ADCL; 					// Read ADCL first because it locks ADCH  
-	uint8_t high = ADCH; 					// Unlocks both
+	uint8_t low  = ADCL; 				// must read ADCL first - it then locks ADCH 
+	uint8_t high = ADCH; 				// unlocks both
 
-	uint16_t result = (high << 8) | low;
+	long result = (high<<8) | low;
 
-	result = 1125300L / result; 			// Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
-	return result; 							// Vcc in millivolts
+	result = 1125300L / result; 		// Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
+	return result; 						// Vcc in millivolts
 }
 
 void PowerManagement::operator()(){
-	if(++lastUpdateCycles > updateCycles){
-		transmitter.updateVoltage(readVoltage());
-		lastUpdateCycles = 0;
+	uint16_t voltage = readVoltage();
+	if(voltage != lastVoltage){
+		transmitter.updateVoltage(voltage);
+		lastVoltage = voltage;
 	}
 }
 

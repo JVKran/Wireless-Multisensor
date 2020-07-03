@@ -8,17 +8,17 @@
 
 #define CLM_5MIN  300000
 #define CLM_10MIN 600000
-#define CML_15MIN 900000
+#define CLM_15MIN 900000
 
 class Climate {
 	private:
 		ForcedClimate & climateSensor;
 		ManchesterTransmitter & transmitter;
 
-		uint16_t lastUpdateCycles = 0;
+		uint16_t lastUpdateCycles;
 		uint16_t updateCycles;
 	public:
-		Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint32_t & updatePeriod = CLM_5MIN);
+		Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint32_t updatePeriod = CLM_5MIN);
 
 		void begin();
 		void operator()();

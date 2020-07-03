@@ -38,16 +38,16 @@ menu.
 #include "Climate.hpp"
 #include "manchesterTransmitter.hpp"
 
-const uint8_t sda 			= PIN_B0;
-const uint8_t scl 			= PIN_B2;
-const uint8_t transmitPin 	= PIN_B4;
-const uint8_t pirPin 		= PCINT1;
-const uint8_t multiSensorId = 1;
+constexpr uint8_t sda 			= PIN_B0;
+constexpr uint8_t scl 			= PIN_B2;
+constexpr uint8_t transmitPin 	= PIN_B4;
+constexpr uint8_t pirPin 		= PCINT1;
+constexpr uint8_t multiSensorId = 1;
 
 ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId, transmitPin, MAN_1200);
 PassiveInfrared pirSensor = PassiveInfrared(pirPin, transmitter);
 ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
-Climate climateSensor = Climate(bme, transmitter, CLM_5MIN);
+Climate climateSensor = Climate(bme, transmitter, CLM_15MIN);
 PowerManagement power = PowerManagement(transmitter);
 
 ISR(PCINT0_vect){
@@ -56,15 +56,14 @@ ISR(PCINT0_vect){
 
 void setup() {
 	TinyWireM.begin();
-	bme.begin();
 	climateSensor.begin();
 	power.begin();
 }
 
 void loop() {
-	pirSensor();		// Handle the possible occurence of an interrupt.
-	climateSensor();	
 	power();
+	pirSensor();				// Handle the possible occurence of an interrupt.
+	climateSensor();	
 
 	transmitter();
 
