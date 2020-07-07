@@ -1,7 +1,8 @@
 #include "powerSaving.hpp"
 
-PowerManagement::PowerManagement(ManchesterTransmitter & transmitter):
-	transmitter(transmitter)
+PowerManagement::PowerManagement(ManchesterTransmitter & transmitter, const uint32_t voltageUpdatePeriod):
+	transmitter(transmitter),
+	voltageUpdateCycles(voltageUpdatePeriod / 8000)			// Wakes up at least every 8 seconds
 {}
 
 void PowerManagement::begin(){
@@ -10,21 +11,17 @@ void PowerManagement::begin(){
 
 void PowerManagement::sleep(int timerPrescaler){
 	if(timerPrescaler){
-		setup_watchdog(timerPrescaler);
+		setupWatchdog(timerPrescaler);
 	}
-	set_adc(false);            				// Turn off ADC (saves ~230uA).
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-	// power_all_disable();  					// Power off ADC, Timer 0 and 1 and the serial interface.
 	sleep_enable();
 	sleep_cpu();
 
 	sleep_disable();   
-	// power_all_enable();    					// Power everything back on. 
 	wdt_disable();
-	set_adc(true);  
 }
 
-void PowerManagement::set_adc(const bool state){
+void PowerManagement::setAdc(const bool state){
 	if(state){
 		ADCSRA |= (1<<ADEN);
 	} else {
@@ -35,7 +32,7 @@ void PowerManagement::set_adc(const bool state){
 //Sets the watchdog timer to wake us up, but not reset
 //0=16ms, 1=32ms, 2=64ms, 3=128ms, 4=250ms, 5=500ms
 //6=1sec, 7=2sec, 8=4sec, 9=8sec
-void PowerManagement::setup_watchdog(int timerPrescaler) {
+void PowerManagement::setupWatchdog(int timerPrescaler) {
 	if (timerPrescaler > 9 ){
 		timerPrescaler = 9;
 	}
@@ -52,6 +49,7 @@ void PowerManagement::setup_watchdog(int timerPrescaler) {
 }
 
 uint16_t PowerManagement::readVoltage(){
+	setAdc(true);
 	// Read 1.1V reference against AVcc
 	// set the reference to Vcc and the measurement to the internal 1.1V reference
 	#if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -74,14 +72,14 @@ uint16_t PowerManagement::readVoltage(){
 	long result = (high<<8) | low;
 
 	result = 1125300L / result; 		// Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
-	return result; 						// Vcc in millivolts
+	setAdc(false); 						// Saves 230uA
+	return result; 						// Vcc in millivolts 
 }
 
 void PowerManagement::operator()(){
-	uint16_t voltage = readVoltage();
-	if(voltage > lastVoltage + 10 or voltage < lastVoltage - 10){
-		transmitter.updateVoltage(voltage);
-		lastVoltage = voltage;
+	if(lastUpdateCycles++ > voltageUpdateCycles){
+		lastUpdateCycles = 0;
+		transmitter.updateVoltage(readVoltage());
 	}
 }
 

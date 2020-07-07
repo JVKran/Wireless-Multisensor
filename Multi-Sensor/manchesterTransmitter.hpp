@@ -12,7 +12,7 @@ class ManchesterTransmitter {
 
 		int16_t lastTemperature = 0;
 		int16_t lastHumidity = 0;
-		int32_t lastPressure = 0;
+		uint32_t lastPressure = 0;
 		uint8_t lastMotion = false;
 		uint16_t lastVoltage = 0;
 
@@ -25,7 +25,7 @@ class ManchesterTransmitter {
 
 		void updateMotion();
 		void updateVoltage(const uint16_t voltage);
-		void updateClimate(const int16_t temperature, const int16_t humidity, const int32_t pressure);
+		void updateClimate(const int16_t temperature, const int16_t humidity, const uint32_t pressure);
 
 };
 

@@ -8,16 +8,20 @@ Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmit
 {}
 
 void Climate::operator()(){
-	// Millis() wouls be of great use here, I know... But it saves some flash memory!
 	if(++lastUpdateCycles > updateCycles){
 		climateSensor.takeForcedMeasurement();
-		transmitter.updateClimate(climateSensor.getTemperatureCelcius(), climateSensor.getRelativeHumidity(), climateSensor.getPressure());
+		int16_t temp = climateSensor.getTemperatureCelcius();
+		int16_t hum = climateSensor.getRelativeHumidity();
+		int32_t pres = climateSensor.getPressure();
+		transmitter.updateClimate(temp, hum, pres);
 		lastUpdateCycles = 0;
 	}
 }
 
 void Climate::begin(){
-	climateSensor.begin();
-	climateSensor.takeForcedMeasurement();
-	transmitter.updateClimate(climateSensor.getTemperatureCelcius(), climateSensor.getRelativeHumidity(), climateSensor.getPressure());
+	climateSensor.begin();		// Forced measurement is taken here
+	int16_t temp = climateSensor.getTemperatureCelcius();
+	int16_t hum = climateSensor.getRelativeHumidity();
+	int32_t pres = climateSensor.getPressure();
+	transmitter.updateClimate(temp, hum, pres);
 }

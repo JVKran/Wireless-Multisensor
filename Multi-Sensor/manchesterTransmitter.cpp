@@ -43,9 +43,9 @@ void ManchesterTransmitter::updateVoltage(const uint16_t voltage){
 	dataChanged = true;
 }
 
-void ManchesterTransmitter::updateClimate(const int16_t temperature, const int16_t humidity, const int32_t pressure){
+void ManchesterTransmitter::updateClimate(const int16_t temperature, const int16_t humidity, const uint32_t pressure){
 	lastTemperature = temperature;
 	lastHumidity = humidity;
-	lastPressure = pressure;
+	lastPressure = pressure - 6400;			// Minus 6400 for 1MHz mode for some unkown reason; bug? After substraction everything is how it should be.
 	dataChanged = true;
 }

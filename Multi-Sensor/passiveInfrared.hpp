@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <Manchester.h>
-#include <avr/interrupt.h>		// Required for ISR function
+#include <avr/interrupt.h>
 #include "manchesterTransmitter.hpp"
 
 class PassiveInfrared {
