@@ -3,7 +3,9 @@
 PassiveInfrared::PassiveInfrared(const uint8_t pin, ManchesterTransmitter & transmitter):
 	pin(pin),
 	transmitter(transmitter)
-{
+{}
+
+void PassiveInfrared::begin(){
 	cli();									// Disable interrupts during startup.
 	PCMSK |= (1 << pin);					// Enable the interrupthandler (ISR) for the desired pin.
 	GIMSK |= (1 << PCIE);             		// Enable PCINT interrupt in the general interrupt mask

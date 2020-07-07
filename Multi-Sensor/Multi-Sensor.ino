@@ -1,9 +1,10 @@
 /* Power Consumption
 The ATtiny has the WDT enabled which uses 4uA. Furthermore, the AM312 is 
-continuously drawing 13uA and the BME280 draws 0.25uA when in sleep.
+continuously drawing 13uA and the BME280 draws 0.25uA when in sleep. Furthermore,
+there are a couple capacitor with a leakage current.
 
-This sums up to 17.25uA which corresponds to the readings of my multimeter.
-With a CR2032 this results in ((230mAh / 0.01727mA) / 24 =) 563 days of
+This sums up to 33uA which corresponds to the readings of my multimeter.
+With a CR2032 this results in ((230mAh / 0.033mA) / 24 =) 290 days of
 worry-free wireless use.
 
 However, that is without taking the STX882 into account, which isn't fair...
@@ -11,9 +12,8 @@ During transmission it draws 34mA... In sleep it's only 0.1uA; no problem there.
 The transmission of 1 bit takes (1/1200 =) 833uS. 11 elements * 8 bits = 88 bits
 to transmit. That results in (833 * 88 =) 73 milliseconds of transmission.
 
-With a 5 minute period, that results in the following calculation;
-300s @ 17.25uA + 0.073s @ 34000uA = 5175uAs + 2482uAs = 7657uAs = 0.0021mAh.
-0.0021mA per 5 minutes = 0.025mA per hour. (230 / 0.025) / 24 = 383 days.
+With a 15 minute period, that results in the following calculation;
+900s @ 17.25uA + 0.073s @ 34000uA = 15525uAs + 2482uAs = 72028uA / 900 = 80uA on average.
 
 That's pretty impressive!
 
@@ -25,14 +25,7 @@ As another flash saving method, millis() can be disabled from te same dropdown
 menu.
 */
 
-#include <Manchester.h>			// 433MHz Manchester encoding
-#include <avr/sleep.h>        	// Sleep Modes
-#include <avr/power.h>        	// Power management
-#include <avr/delay.h>        	// Delay for < 8MHz
-#include <avr/io.h>				// Required headers for AVR defines
-#include <avr/interrupt.h>		// Required for ISR function
 #include <forcedClimate.h>		// Small and efficient BME280 Library
-
 #include "powerSaving.hpp"
 #include "passiveInfrared.hpp"
 #include "Climate.hpp"
@@ -41,29 +34,33 @@ menu.
 constexpr uint8_t sda 			= PIN_B0;
 constexpr uint8_t scl 			= PIN_B2;
 constexpr uint8_t transmitPin 	= PIN_B4;
+constexpr uint8_t enablePin 	= PIN_B3;
 constexpr uint8_t pirPin 		= PCINT1;
 constexpr uint8_t multiSensorId = 1;
 
-ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId, transmitPin, MAN_1200);
-PassiveInfrared pirSensor = PassiveInfrared(pirPin, transmitter);
+ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId, enablePin);
+PassiveInfrared pir = PassiveInfrared(pirPin, transmitter);
 ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
-Climate climateSensor = Climate(bme, transmitter, CLM_15MIN);
+Climate climate = Climate(bme, transmitter, CLM_15MIN);
 PowerManagement power = PowerManagement(transmitter);
 
 ISR(PCINT0_vect){
-	pirSensor.sensedMotion();
+	pir.sensedMotion();
 }
 
 void setup() {
 	TinyWireM.begin();
-	climateSensor.begin();
+	transmitter.begin(transmitPin, MAN_1200);
+	pir.begin();
+	bme.begin();
+	climate.begin();
 	power.begin();
 }
 
 void loop() {
+	pir();						// Handle the possible occurence of an interrupt.
+	climate();	
 	power();
-	pirSensor();				// Handle the possible occurence of an interrupt.
-	climateSensor();	
 
 	transmitter();
 

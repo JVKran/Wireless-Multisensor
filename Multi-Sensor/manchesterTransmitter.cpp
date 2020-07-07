@@ -1,9 +1,14 @@
 #include "manchesterTransmitter.hpp"
 
-ManchesterTransmitter::ManchesterTransmitter(const uint8_t & id, const uint8_t & pin, const uint8_t & baudrate):
-	id(id)
-{
-	man.setupTransmit(pin, baudrate);
+ManchesterTransmitter::ManchesterTransmitter(const uint8_t id, const uint8_t enablePin):
+	id(id),
+	enablePin(enablePin)
+{}
+
+void ManchesterTransmitter::begin(const uint8_t transmitPin, const uint8_t baudrate){
+	pinMode(enablePin, OUTPUT);
+	digitalWrite(enablePin, LOW);
+	man.setupTransmit(transmitPin, baudrate);
 }
 
 void ManchesterTransmitter::operator()(){
@@ -22,8 +27,10 @@ void ManchesterTransmitter::transmitData(){
 								lastPressure & 0x00FF, lastPressure >> 8, lastPressure >> 16, lastPressure >> 24, 
 								lastVoltage & 0x00FF, lastVoltage >> 8
 								};
-								
+
+	digitalWrite(enablePin, HIGH);
 	man.transmitArray(bufferSize, data);
+	digitalWrite(enablePin, LOW);	
 }
 
 void ManchesterTransmitter::updateMotion(){

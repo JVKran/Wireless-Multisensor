@@ -12,21 +12,16 @@ void PowerManagement::sleep(int timerPrescaler){
 	if(timerPrescaler){
 		setup_watchdog(timerPrescaler);
 	}
-	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	set_adc(false);            				// Turn off ADC (saves ~230uA).
-	#if defined(__AVR_ATmega328P__)
-		power_spi_disable();
-	#endif
-	power_all_disable();  					// Power off ADC, Timer 0 and 1 and the serial interface.
+	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+	// power_all_disable();  					// Power off ADC, Timer 0 and 1 and the serial interface.
 	sleep_enable();
-	sleep_bod_disable();
-	sei(); //first instruction after SEI is guaranteed to execute before any interrupt
 	sleep_cpu();
 
 	sleep_disable();   
-	power_all_enable();    					// Power everything back on.
-	set_adc(true);   
-	wdt_disable();							// Prevent wakeup during being awake.
+	// power_all_enable();    					// Power everything back on. 
+	wdt_disable();
+	set_adc(true);  
 }
 
 void PowerManagement::set_adc(const bool state){
@@ -84,7 +79,7 @@ uint16_t PowerManagement::readVoltage(){
 
 void PowerManagement::operator()(){
 	uint16_t voltage = readVoltage();
-	if(voltage != lastVoltage){
+	if(voltage > lastVoltage + 10 or voltage < lastVoltage - 10){
 		transmitter.updateVoltage(voltage);
 		lastVoltage = voltage;
 	}

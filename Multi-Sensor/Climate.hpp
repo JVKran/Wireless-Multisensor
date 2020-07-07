@@ -1,7 +1,6 @@
 #ifndef __CLIMATE_HPP
 #define __CLIMATE_HPP
 
-#include <stdint.h>
 #include <Arduino.h>
 #include <forcedClimate.h>
 #include "manchesterTransmitter.hpp"
