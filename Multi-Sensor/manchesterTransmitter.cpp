@@ -30,7 +30,7 @@ void ManchesterTransmitter::transmitData(){
 
 	digitalWrite(enablePin, HIGH);
 	man.transmitArray(bufferSize, data);
-	digitalWrite(enablePin, LOW);	
+	digitalWrite(enablePin, LOW);
 }
 
 void ManchesterTransmitter::updateMotion(){

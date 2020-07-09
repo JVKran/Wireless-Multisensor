@@ -14,8 +14,8 @@ class Climate {
 		ForcedClimate & climateSensor;
 		ManchesterTransmitter & transmitter;
 
-		uint16_t lastUpdateCycles;
-		uint16_t updateCycles;
+		uint16_t lastUpdateCycles = 0;
+		const uint16_t updateCycles;
 	public:
 		Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmitter, const uint32_t updatePeriod = CLM_5MIN);
 

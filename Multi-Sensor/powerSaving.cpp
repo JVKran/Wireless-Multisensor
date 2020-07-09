@@ -1,8 +1,8 @@
 #include "powerSaving.hpp"
 
-PowerManagement::PowerManagement(ManchesterTransmitter & transmitter, const uint32_t voltageUpdatePeriod):
+PowerManagement::PowerManagement(ManchesterTransmitter & transmitter, const uint32_t updatePeriod):
 	transmitter(transmitter),
-	voltageUpdateCycles(voltageUpdatePeriod / 8000)			// Wakes up at least every 8 seconds
+	updateCycles(updatePeriod / 8000)			// Wakes up at least every 8 seconds
 {}
 
 void PowerManagement::begin(){
@@ -32,7 +32,7 @@ void PowerManagement::setAdc(const bool state){
 //Sets the watchdog timer to wake us up, but not reset
 //0=16ms, 1=32ms, 2=64ms, 3=128ms, 4=250ms, 5=500ms
 //6=1sec, 7=2sec, 8=4sec, 9=8sec
-void PowerManagement::setupWatchdog(int timerPrescaler) {
+void PowerManagement::setupWatchdog(int timerPrescaler){
 	if (timerPrescaler > 9 ){
 		timerPrescaler = 9;
 	}
@@ -71,13 +71,21 @@ uint16_t PowerManagement::readVoltage(){
 
 	long result = (high<<8) | low;
 
+	ADCSRA |= _BV(ADSC); 				// Start conversion
+	while (bit_is_set(ADCSRA,ADSC)); 	// measuring
+
+	low  = ADCL; 				// must read ADCL first - it then locks ADCH 
+	high = ADCH; 				// unlocks both
+
+	result = (high<<8) | low;
+
 	result = 1125300L / result; 		// Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
 	setAdc(false); 						// Saves 230uA
 	return result; 						// Vcc in millivolts 
 }
 
 void PowerManagement::operator()(){
-	if(lastUpdateCycles++ > voltageUpdateCycles){
+	if(++lastUpdateCycles >= updateCycles){
 		lastUpdateCycles = 0;
 		transmitter.updateVoltage(readVoltage());
 	}

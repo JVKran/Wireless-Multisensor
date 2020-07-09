@@ -32,18 +32,18 @@ menu; it's not used anyway.
 #include "Climate.hpp"
 #include "manchesterTransmitter.hpp"
 
-constexpr uint8_t sda 			= PIN_B0;
-constexpr uint8_t scl 			= PIN_B2;
-constexpr uint8_t transmitPin 	= PIN_B4;
-constexpr uint8_t enablePin 	= PIN_B3;
-constexpr uint8_t pirPin 		= PCINT1;
-constexpr uint8_t multiSensorId = 1;
+const uint8_t sda 			= PIN_B0;
+const uint8_t scl 			= PIN_B2;
+const uint8_t transmitPin 	= PIN_B4;
+const uint8_t enablePin 	= PIN_B3;
+const uint8_t pirPin 		= PCINT1;
+const uint8_t multiSensorId = 1;
 
 ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId, enablePin);
 PassiveInfrared pir = PassiveInfrared(pirPin, transmitter);
 ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
 Climate climate = Climate(bme, transmitter, CLM_15MIN);
-PowerManagement power = PowerManagement(transmitter, PM_30MIN);
+PowerManagement power = PowerManagement(transmitter, PM_15MIN);
 
 ISR(PCINT0_vect){
 	pir.sensedMotion();
