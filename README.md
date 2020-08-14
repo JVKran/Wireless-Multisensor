@@ -1,5 +1,5 @@
 # Wireless Multi-Sensor
-ESP8266's are great! They are suited for an endless amount of fun projects. However, when you want to create small wireless modules, they are not so great; they consume way to much power and are pretty bulky. That's where this Wireless Multisensor comes into play; it features a sleep current of 50uA resulting in a lifetime of 3 years when using a CR123A battery! Furthermore, it has a neat casing that really finishes it off.
+ESP8266's are great! They are suited for an endless amount of fun projects. However, when you want to create small wireless modules, they are not so great; they consume way too much power and are pretty bulky. That's where this Wireless Multisensor comes into play; it features a sleep current of 50uA resulting in a lifetime of 3 years when using a CR123A battery! Furthermore, it has a neat PCB and casing that really finishes it off.
 
 ## Features
 ### Climate
