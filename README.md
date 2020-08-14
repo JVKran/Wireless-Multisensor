@@ -1,10 +1,18 @@
 # Wireless Multi-Sensor
-After years of using Home Assistant with power hungry ESP's and the desire to create battery powered sensor modules, I started thinking about alternatives. Soon, I found out about these ATtiny microcontrollers and their incredibly low amount of current draw; that's when I knew this could work.
+ESP8266's are great! They are suited for an endless amount of fun projects. However, when you want to create small wireless modules, they are not so great; they consume way to much power and are pretty bulky. That's where this Wireless Multisensor comes into play; it features a sleep current of 50uA resulting in a lifetime of 3 years when using a CR123A battery! Furthermore, it has a neat casing that really finishes it off.
 
-<img src="/Documentation/Multi-Sensor.png" width="200">
+## Features
+### Climate
+The Multisensor is equipped with a BME280 that's able to measure temperature, relative humidity and pressure. The interval at which these are measured and transmitted can easily be changed. Due to the encredibly well engineerd chip, measurements are very accurate.
 
-## Research
-I've done quite a lot of research to determine the best protocol to use. This can be found in the Documentation folder. The result was, unsurprisingly, that 433MHz is the way to go. There are quite a lot of reasons to choose 433MHz; check out the document for further information.
+### Motion
+An AM312 Passive Infrared sensor is used; these are small, only draw 16uA and dont suffer from false positives. The detection distance is approximately 3-5m depending on light circumstances.
 
-## Status
-Right now, it's possible to let an ATtiny85 with STX822, CR2032 and AM312 inform Home Assistant when there's movement. Furthermore, since this release it's also reporting the temperature, humidity and pressure at configurable intervals.
+### Reed Switch
+Since it could be useful to detect the position of a door or window, one pin is exposed through a JST-Connector. This is done so one can also use a button to trigger a transmission; hence it doesn't have to be wired to a reed switch.
+
+### Illuminance
+Last but not least the Multisensor is also equipped with a BH1750 to measure illuminance with an accuracy of 4lx. It only draws 6uA when in sleep making it ideal for a wireless multisensor like this.
+
+### 3 Years
+The ATtiny85V with a minimum voltage of 1.7V and a clock set at 1MHz paired with the abovely mentioned components and some very efficient libraries, results in a current draw of 52uA. Based on a 1500mAh CR123A this means the battery has got to be changed every (1500mAh / 0.052 =) 28800 hours or 1200 days or 3.3 years!

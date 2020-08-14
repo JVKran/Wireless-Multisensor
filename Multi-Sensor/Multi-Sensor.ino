@@ -4,8 +4,8 @@ continuously drawing 13uA, the BME280 draws 0.25uA when in sleep and the BH1750
 draws 6uA in sleep. Furthermore, there are a couple of capacitors resulting 
 in a leakage current.
 
-This sums up to 39uA which corresponds to the readings of my multimeter.
-With a CR2032 this results in ((230mAh / 0.039mA) / 24 =) 250 days of
+This sums up to 50uA which corresponds to the readings of my multimeter.
+With a CR2032 this results in ((230mAh / 0.050mA) / 24 =) 1250 days of
 worry-free wireless use.
 
 However, that is without taking the STX882 into account, which isn't fair...
@@ -14,8 +14,8 @@ The transmission of 1 bit takes (1/2400 =) 416uS. 11 elements * 8 bits = 88 bits
 to transmit. That results in (416 * 88 =) 36 milliseconds of transmission.
 
 A 15 minute period results in the following calculation;
-900s @ 39uA + 0.036s @ 34000uA = 35100uAs + 1224uAs = 30924uA / 900 = 40uA on average.
-This results in an expected lifetime of (230mAh / 0.040 =) 5750 hours (240 days).  
+900s @ 50uA + 0.036s @ 34000uA = 45000uAs + 1224uAs = 30924uA / 900 = 52uA on average.
+This results in an expected lifetime of (1500mAh / 0.052 =) 28800 hours (1200 days).  
 
 That's pretty impressive!
 
