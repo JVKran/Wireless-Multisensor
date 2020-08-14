@@ -9,7 +9,7 @@
 
 WiFiClient espClient;
 mqttClient client(SSID, WPA, BROKER, TOPIC, espClient);
-SensorBridge sensorBridge = SensorBridge(D5, MAN_2400);
+SensorBridge sensorBridge = SensorBridge(2, MAN_2400);
 
 void callback(char* topic, byte* payload, unsigned int length) {
     static String message;

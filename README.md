@@ -16,3 +16,37 @@ Last but not least the Multisensor is also equipped with a BH1750 to measure ill
 
 ### 3 Years
 The ATtiny85V with a minimum voltage of 1.7V and a clock set at 1MHz paired with the abovely mentioned components and some very efficient libraries, results in a current draw of 52uA. Based on a 1500mAh CR123A this means the battery has got to be changed every (1500mAh / 0.052 =) 28800 hours or 1200 days or 3.3 years!
+
+## Home-Assistant
+Since the bridge is used to 'bridge' the messages from the Wireless Multisensor to MQTT, all we have to do is to create some binary and normal MQTT sensors.
+
+```yaml
+sensor:
+  - platform: mqtt
+    state_topic: "/sensormodules/1/spanning"                     
+  - platform: mqtt
+    state_topic: "/sensormodules/1/temperatuur"
+    device_class: temperature
+  - platform: mqtt
+    state_topic: "/sensormodules/1/vochtigheid"                                                                             
+    device_class: humidity                                                                                                                                   
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/luchtdruk"                                                                               
+    device_class: pressure                                                                                                  
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/lichtsterkte"                                                                            
+    device_class: illuminance 
+
+binary_sensor:
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/beweging"
+    payload_on: "1"                                                                                                         
+    name: "Beweging 1"                                                                                                      
+    off_delay: 5                                                                                                            
+    device_class: "motion"
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/reed"                                                                                    
+    payload_on: "0"                                                                                                         
+    payload_off: "1"
+    device_class: "door"                                                       
+```

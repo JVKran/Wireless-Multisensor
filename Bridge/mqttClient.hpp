@@ -19,6 +19,9 @@ class mqttClient : public SensorListener {
         char* ssid;
         char* password;
         char* mqttServer;
+
+        const char* clientName;
+        const char* clientPassword;
         
         const char* topic;
         PubSubClient client;
@@ -29,7 +32,7 @@ class mqttClient : public SensorListener {
         uint8_t amountOfListeners = 0;
     public:
 
-        mqttClient(char* ssid, char* password, char* mqttServer, const char* topic, WiFiClient & espClient, const bool retainedMessages = true, const uint8_t qosLevel = 1);
+        mqttClient(char* ssid, char* password, char* mqttServer, const char* topic, WiFiClient & espClient, const char* clientName = "SensorBridge", const char* clientPassword = "BridgePass", const bool retainedMessages = true, const uint8_t qosLevel = 1);
 
         void addListener(messageListener & listener);
         void notifyListeners(const String & mesage, const char* topic);

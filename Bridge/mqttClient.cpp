@@ -1,9 +1,11 @@
 #include "mqttClient.hpp"
 
-mqttClient::mqttClient(char* ssid, char* password, char* mqttServer, const char* topic, WiFiClient & espClient, const bool retainedMessages, const uint8_t qosLevel):
+mqttClient::mqttClient(char* ssid, char* password, char* mqttServer, const char* topic, WiFiClient & espClient, const char* clientName, const char* clientPassword, const bool retainedMessages, const uint8_t qosLevel):
     ssid(ssid),
     password(password),
     mqttServer(mqttServer),
+    clientName(clientName),
+    clientPassword(clientPassword),
     topic(topic),
     client(espClient),
     retainedMessages(retainedMessages),
@@ -41,7 +43,7 @@ void mqttClient::setupConnections(){
 
 void mqttClient::reconnect() {
     while (!client.connected()) {
-        if (client.connect("ESP8266Client", "Arduino", "Snip238!")) {
+        if (client.connect("Wireless Multisensor Bridge", clientName, clientPassword)) {
             client.subscribe(topic);
             for (int i = 0; i < amountOfListeners; i++){
                 listeners[i]->messageReceived("CONNECTED");
