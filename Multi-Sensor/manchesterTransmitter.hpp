@@ -7,7 +7,6 @@
 class ManchesterTransmitter {
 	private:
 		const uint8_t id;
-		const uint8_t enablePin;
 		bool dataChanged = true;
 
 		int16_t lastTemperature = 0;
@@ -15,10 +14,12 @@ class ManchesterTransmitter {
 		uint32_t lastPressure = 0;
 		uint8_t lastMotion = false;
 		uint16_t lastVoltage = 0;
+		uint16_t lastIntensity = 0;
+		uint8_t lastReedState = false;
 
 		void transmitData();
 	public:
-		ManchesterTransmitter(const uint8_t id, const uint8_t enablePin = PIN_B3);
+		ManchesterTransmitter(const uint8_t id);
 		void begin(const uint8_t transmitPin = PIN_B0, const uint8_t baudrate = MAN_1200);
 
 		void operator()();
@@ -26,6 +27,8 @@ class ManchesterTransmitter {
 		void updateMotion();
 		void updateVoltage(const uint16_t voltage);
 		void updateClimate(const int16_t temperature, const int16_t humidity, const uint32_t pressure);
+		void updateLightIntensity(const uint16_t intensity);
+		void updateReed(const bool state);
 
 };
 

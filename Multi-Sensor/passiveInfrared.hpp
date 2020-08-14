@@ -9,7 +9,7 @@
 class PassiveInfrared {
 	private:
 		const uint8_t pin;
-		bool sendMotion = false;
+		bool possibleStateChange = false;
 
 		ManchesterTransmitter & transmitter;
 	public:

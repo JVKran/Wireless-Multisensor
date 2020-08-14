@@ -1,10 +1,11 @@
 /* Power Consumption
 The ATtiny has the WDT enabled which uses 4uA. Furthermore, the AM312 is 
-continuously drawing 13uA and the BME280 draws 0.25uA when in sleep. Furthermore,
-there are a couple of capacitors resulting in a leakage current.
+continuously drawing 13uA, the BME280 draws 0.25uA when in sleep and the BH1750 
+draws 6uA in sleep. Furthermore, there are a couple of capacitors resulting 
+in a leakage current.
 
-This sums up to 33uA which corresponds to the readings of my multimeter.
-With a CR2032 this results in ((230mAh / 0.033mA) / 24 =) 290 days of
+This sums up to 39uA which corresponds to the readings of my multimeter.
+With a CR2032 this results in ((230mAh / 0.039mA) / 24 =) 250 days of
 worry-free wireless use.
 
 However, that is without taking the STX882 into account, which isn't fair...
@@ -13,8 +14,8 @@ The transmission of 1 bit takes (1/2400 =) 416uS. 11 elements * 8 bits = 88 bits
 to transmit. That results in (416 * 88 =) 36 milliseconds of transmission.
 
 A 15 minute period results in the following calculation;
-900s @ 33uA + 0.036s @ 34000uA = 29700uAs + 1224uAs = 30924uA / 900 = 35uA on average.
-This results in an expected lifetime of (230mAh / 0.035 =) 6571 hours (270 days).  
+900s @ 39uA + 0.036s @ 34000uA = 35100uAs + 1224uAs = 30924uA / 900 = 40uA on average.
+This results in an expected lifetime of (230mAh / 0.040 =) 5750 hours (240 days).  
 
 That's pretty impressive!
 
@@ -27,41 +28,59 @@ menu; it's not used anyway.
 */
 
 #include <forcedClimate.h>		// Small and efficient BME280 Library
+#include <BH1750.h>				// Small and efficient BH1750 library
+
 #include "powerSaving.hpp"
 #include "passiveInfrared.hpp"
 #include "Climate.hpp"
+#include "Light.hpp"
+#include "Reed.hpp"
 #include "manchesterTransmitter.hpp"
 
 const uint8_t sda 			= PIN_B0;
 const uint8_t scl 			= PIN_B2;
 const uint8_t transmitPin 	= PIN_B4;
-const uint8_t enablePin 	= PIN_B3;
+const uint8_t reedPin 		= PCINT3;
 const uint8_t pirPin 		= PCINT1;
 const uint8_t multiSensorId = 1;
 
-ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId, enablePin);
+ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId);
 PassiveInfrared pir = PassiveInfrared(pirPin, transmitter);
-ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
-Climate climate = Climate(bme, transmitter, CLM_15MIN);
+Reed reed = Reed(reedPin, transmitter);
 PowerManagement power = PowerManagement(transmitter, PM_15MIN);
 
+ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
+Climate climate = Climate(bme, transmitter, CLM_15MIN);
+
+BH1750 lightSensor = BH1750();
+Light light = Light(lightSensor, transmitter, LHT_5MIN);
+
 ISR(PCINT0_vect){
+	cli();
 	pir.sensedMotion();
+	reed.sensedChange();
 }
 
 void setup() {
-	TinyWireM.begin();
 	transmitter.begin(transmitPin, MAN_2400);
+
 	pir.begin();
+	reed.begin();
+
+	light.begin();
 	climate.begin();
 	power.begin();
 }
 
 void loop() {
-	pir();						// Handle the possible occurence of an interrupt.
-	climate();	
+	climate();
+	light();	
 	power();
 
+	reed();						// so the voltage can settle resulting in an accurate digital reading.
+	pir();						// Handle the possible occurence of an interrupt. Fist climate, light and power are taken care of
+
 	transmitter();
+	sei();
 	power.sleep(PM_8SEC);		// Sleep for 8 seconds or shorter when an interrupt occurs.
 }

@@ -13,12 +13,12 @@ void PassiveInfrared::begin(){
 }
 
 void PassiveInfrared::sensedMotion(){
-	sendMotion = true;
+	possibleStateChange = true;
 }
 
 void PassiveInfrared::operator()(){
-	if(sendMotion){
+	if(possibleStateChange && digitalRead(pin)){
 		transmitter.updateMotion();
-		sendMotion = false;
+		possibleStateChange = false;
 	}
 }
