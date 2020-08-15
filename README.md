@@ -16,36 +16,35 @@ An AM312 Passive Infrared sensor is used; these are small, only draw 16uA and do
 Since it could be useful to detect the position of a door or window, one pin is exposed through a JST-Connector. This is done so one can also use a button to trigger a transmission; hence it doesn't have to be wired to a reed switch. A button to toggle lights or a vibration sensor to fire the alarm are all possibly useful scenario's. It's important to note that current draw is very limited; due to the small amount of available energy, the +-rail of the JST-Connector is placed in series with a 1M resistor. Hence a button with a LED is not possible. Otherwise the battery would be dead in no time.
 
 ### Illuminance
-Last but not least the Multisensor is also equipped with a BH1750 to measure illuminance. By only using my [OneTime-BH1750 library](https://github.com/JVKran/OneTime-BH1750), the chip is incredibly energy efficient; it only draws 6uA when in sleep making it ideal for a wireless multisensor like this. This mode results in an accuracy of 4lx. That's totally acceptable since a measurement in High Res mode, with an accuracy of 1lx, would take 160ms; that's a little long which would impact the battery life significantly. All in all it's way more efficient than a traditional LDR making it perfect for this Wireless Multisensor
+Last but not least the Multisensor is also equipped with a BH1750 to measure illuminance. By only using my [OneTime-BH1750 library](https://github.com/JVKran/OneTime-BH1750), the chip is incredibly energy efficient; it only draws 6uA when in sleep making it ideal for a wireless multisensor like this. This mode results in an accuracy of 4lx. That's totally acceptable since a measurement in High Res mode, with an accuracy of 1lx, would take 160ms; that's a little long which would impact the battery life significantly. All in all it's way more efficient than a traditional LDR making it perfect for this Wireless Multisensor. Further specifications can be found in the [datasheet](https://www.mouser.com/datasheet/2/348/bh1750fvi-e-186247.pdf).
 
 ### Years of worryless use
 The ATtiny85V with a minimum voltage of 1.7V and a clock set at 1MHz paired with the abovely mentioned components and some very efficient libraries, results in a current draw of 52uA. Based on a 1500mAh CR123A this means the battery has got to be changed every (1500mAh / 0.052 =) 28800 hours or 1200 days or 3.3 years!
 
 ## Home-Assistant
-Since the bridge is used to 'bridge' the messages from the Wireless Multisensor to MQTT, all we have to do is to create some binary and normal MQTT sensors.
+To be able to let the Wireless-Multisensors talk to, for example, Home-Assistant, one would need to use the Bridge to 'bridge' the 433MHz messages to MQTT. This can be done by using the code in the [Bridge Directory](/Bridge). Further information can also be found there. It boils down to two possibilities; using a dedicated ESP or letting the code run on an already in use ESP. Anyhow, the code is the same. The id of the Wireless-Multisensor defines the topic the measurements are published on. Hence it's important to keep track of what id's are already in use. Two Wireless-Multisensors with the same id doesnt't mean they won't work anymore; they'll just end up as one sensor which isn't what we want.
 
 ```yaml
 sensor:
   - platform: mqtt
-    state_topic: "/sensormodules/1/spanning"                     
+    state_topic: "/sensormodules/1/voltage"                     
   - platform: mqtt
-    state_topic: "/sensormodules/1/temperatuur"
+    state_topic: "/sensormodules/1/temperature"
     device_class: temperature
   - platform: mqtt
-    state_topic: "/sensormodules/1/vochtigheid"                                                                             
+    state_topic: "/sensormodules/1/humidity"                                                                             
     device_class: humidity                                                                                                                                   
   - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/luchtdruk"                                                                               
+    state_topic: "/sensormodules/1/pressure"                                                                               
     device_class: pressure                                                                                                  
   - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/lichtsterkte"                                                                            
+    state_topic: "/sensormodules/1/illuminance"                                                                            
     device_class: illuminance 
 
 binary_sensor:
   - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/beweging"
-    payload_on: "1"                                                                                                         
-    name: "Beweging 1"                                                                                                      
+    state_topic: "/sensormodules/1/motion"
+    payload_on: "1"                                                                                                   
     off_delay: 5                                                                                                            
     device_class: "motion"
   - platform: mqtt                                                                                                          
