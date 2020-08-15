@@ -2,14 +2,17 @@
 #include "mqttClient.hpp"
 #include "sensorBridge.hpp"
 
-#define SSID ""
-#define WPA ""
-#define BROKER ""
-#define TOPIC ""
+// /* Replace these with your own credentials and then uncomment.
+//    Has been commented so you get a compile error when you forget.
+#define SSID "SSID"
+#define WPA "WPA2"
+#define BROKER "0.0.0.0"
+#define TOPIC "/raspberry/home-assistant"
+//*/
 
-WiFiClient espClient;
+WiFiClient espClient;                   // Can also be passed to other instances.
 mqttClient client(SSID, WPA, BROKER, TOPIC, espClient);
-SensorBridge sensorBridge = SensorBridge(3, MAN_2400);
+SensorBridge sensorBridge = SensorBridge();
 
 void callback(char* topic, byte* payload, unsigned int length) {
     static String message;
@@ -21,12 +24,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void setup() {
-    client.setupWifi();
-    client.setupConnections();
-	sensorBridge.addListener(client);
+    client.begin();
+    client.setupWifi();                 // Connect to Network
+    client.setupConnections();          // Connect to Broker
+
+    sensorBridge.begin(3, MAN_2400);
+	sensorBridge.addListener(client);   // Let client listen to sensor readings
 }
 
 void loop() {
-    client();               // Handle incoming messages
-    sensorBridge();         // Handle incoming transmissions from Wireless Multi-Sensors.
+    client();                           // Handle incoming sensor readings and publish them
+    sensorBridge();                     // Handle incoming transmissions from Wireless Multi-Sensors.
 }
