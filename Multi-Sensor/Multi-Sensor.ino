@@ -37,12 +37,12 @@ menu; it's not used anyway.
 #include "Reed.hpp"
 #include "manchesterTransmitter.hpp"
 
-const uint8_t sda 			= PIN_B0;
-const uint8_t scl 			= PIN_B2;
-const uint8_t transmitPin 	= PIN_B4;
-const uint8_t reedPin 		= PCINT3;
-const uint8_t pirPin 		= PCINT1;
-const uint8_t multiSensorId = 1;
+constexpr uint8_t sda 			= PIN_B0;
+constexpr uint8_t scl 			= PIN_B2;
+constexpr uint8_t transmitPin 	= PIN_B4;
+constexpr uint8_t reedPin 		= PCINT3;
+constexpr uint8_t pirPin 		= PCINT1;
+constexpr uint8_t multiSensorId = 1;
 
 ManchesterTransmitter transmitter = ManchesterTransmitter(multiSensorId);
 PassiveInfrared pir = PassiveInfrared(pirPin, transmitter);
@@ -56,7 +56,7 @@ BH1750 lightSensor = BH1750();
 Light light = Light(lightSensor, transmitter, LHT_5MIN);
 
 ISR(PCINT0_vect){
-	cli();
+	cli();						// Disable interrupts to prevent bouncing.
 	pir.sensedMotion();
 	reed.sensedChange();
 }
@@ -66,21 +66,20 @@ void setup() {
 
 	pir.begin();
 	reed.begin();
-
 	light.begin();
 	climate.begin();
 	power.begin();
 }
 
 void loop() {
-	climate();
-	light();	
-	power();
+	climate();					// Measure light temperature, humidity and pressure when it's time to do so.
+	light();					// Measure light intensity when it's time to do so.
+	power();					// Update voltage when it's time to do so.
 
 	reed();						// so the voltage can settle resulting in an accurate digital reading.
-	pir();						// Handle the possible occurence of an interrupt. Fist climate, light and power are taken care of
+	pir();						// Handle the possible occurence of an interrupt. Fist climate, light and power are taken care of.
 
-	transmitter();
-	sei();
+	transmitter();				// Transmit data if data has changed.
+	sei();						// Enable interrupts again.
 	power.sleep(PM_8SEC);		// Sleep for 8 seconds or shorter when an interrupt occurs.
 }

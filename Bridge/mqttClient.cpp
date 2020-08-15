@@ -1,3 +1,5 @@
+/// @file
+
 #include "mqttClient.hpp"
 
 /// \brief
@@ -140,11 +142,11 @@ void mqttClient::dataReceived(const uint8_t sensorId, const bool motion, const b
     String press = String(pressure).substring(0, 4);
     String commaPress = String(pressure).substring(4);
 
-    client.publish(String("/sensormodules/" + String(sensorId) + "/beweging").c_str(),      String(motion).c_str());
+    client.publish(String("/sensormodules/" + String(sensorId) + "/motion").c_str(),      String(motion).c_str());
     client.publish(String("/sensormodules/" + String(sensorId) + "/reed").c_str(),          String(reedState).c_str());
-    client.publish(String("/sensormodules/" + String(sensorId) + "/temperatuur").c_str(),   String(temp + '.' + commaTemp).c_str());
-    client.publish(String("/sensormodules/" + String(sensorId) + "/vochtigheid").c_str(),   String(hum + '.' + commaHum).c_str());
-    client.publish(String("/sensormodules/" + String(sensorId) + "/luchtdruk").c_str(),     String(press + '.' + commaPress).c_str());
-    client.publish(String("/sensormodules/" + String(sensorId) + "/spanning").c_str(),      String(voltage).c_str());
-    client.publish(String("/sensormodules/" + String(sensorId) + "/lichtsterkte").c_str(),  String(lightIntensity).c_str());
+    client.publish(String("/sensormodules/" + String(sensorId) + "/temperature").c_str(),   String(temp + '.' + commaTemp).c_str());
+    client.publish(String("/sensormodules/" + String(sensorId) + "/humidity").c_str(),   String(hum + '.' + commaHum).c_str());
+    client.publish(String("/sensormodules/" + String(sensorId) + "/pressure").c_str(),     String(press + '.' + commaPress).c_str());
+    client.publish(String("/sensormodules/" + String(sensorId) + "/voltage").c_str(),      String(voltage).c_str());
+    client.publish(String("/sensormodules/" + String(sensorId) + "/illuminance").c_str(),  String(lightIntensity).c_str());
 }

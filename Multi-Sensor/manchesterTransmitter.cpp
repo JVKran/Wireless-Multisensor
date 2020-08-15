@@ -1,13 +1,30 @@
+/// @file
+
 #include "manchesterTransmitter.hpp"
 
+/// \brief
+/// Cnstruct Instance
+/// \details
+/// Construct a ManchesterTransmitter instance.
+/// \param id The id of the Sensor Module.
 ManchesterTransmitter::ManchesterTransmitter(const uint8_t id):
 	id(id)
 {}
 
+/// \brief
+/// Begin Instance
+/// \details
+/// Setup the transmitter.
+/// \param transmitPin The pin the transmitter is connected to.
+/// \param baudrate The baudrate at which to transmit packets.
 void ManchesterTransmitter::begin(const uint8_t transmitPin, const uint8_t baudrate){
 	man.setupTransmit(transmitPin, baudrate);
 }
 
+/// \brief
+/// Update
+/// \details
+/// Transmit data if it has been changed since last transmission.
 void ManchesterTransmitter::operator()(){
 	if(dataChanged){
 		transmitData();
@@ -16,6 +33,8 @@ void ManchesterTransmitter::operator()(){
 	}
 }
 
+/// \brief
+/// Transmit Data
 void ManchesterTransmitter::transmitData(){
 	uint8_t bufferSize = 16;
 	uint8_t data[bufferSize] = {bufferSize, id, lastMotion, lastReedState,
@@ -29,16 +48,26 @@ void ManchesterTransmitter::transmitData(){
 	man.transmitArray(bufferSize, data);
 }
 
+/// \brief
+/// Update Motion
 void ManchesterTransmitter::updateMotion(){
 	lastMotion = true;
 	dataChanged = true;
 }
 
+/// \brief
+/// Update Voltage
+/// \param voltage The measured voltage.
 void ManchesterTransmitter::updateVoltage(const uint16_t voltage){
 	lastVoltage = voltage;
 	dataChanged = true;
 }
 
+/// \brief
+/// Update Climate
+/// \param temperature The measured temperature.
+/// \param humidity The measured humidity.
+/// \param pressure The measured pressure.
 void ManchesterTransmitter::updateClimate(const int16_t temperature, const int16_t humidity, const uint32_t pressure){
 	lastTemperature = temperature;
 	lastHumidity = humidity;
@@ -46,11 +75,17 @@ void ManchesterTransmitter::updateClimate(const int16_t temperature, const int16
 	dataChanged = true;
 }
 
+/// \brief
+/// Update Illuminance
+/// \param intensity The measured light intensity.
 void ManchesterTransmitter::updateLightIntensity(const uint16_t intensity){
 	lastIntensity = intensity;
 	dataChanged = true;
 }
 
+/// \brief
+/// Update Reed
+/// \param state The new state of the reedswitch.
 void ManchesterTransmitter::updateReed(const bool state){
 	if(lastReedState != state){
 		lastReedState = state;

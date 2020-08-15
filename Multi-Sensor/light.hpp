@@ -1,3 +1,5 @@
+/// @file
+
 #ifndef __LIGHT_HPP
 #define __LIGHT_HPP
 
@@ -6,6 +8,10 @@
 #include <BH1750.h>
 #include "ManchesterTransmitter.hpp"
 
+/// \brief
+/// Light
+/// \details
+/// Handle updating the Light Intensity; that's all.
 class Light {
 	private:
 		ManchesterTransmitter & transmitter;

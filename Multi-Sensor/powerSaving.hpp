@@ -1,3 +1,5 @@
+/// @file
+
 #ifndef __POWER_SAVING_HPP
 #define __POWER_SAVING_HPP
 
@@ -14,6 +16,11 @@
 #define PM_15MIN 900000
 #define PM_30MIN 1800000
 
+/// \brief
+/// PowerManagement
+/// \details
+/// Handle updating the Battery Voltage and putting the sensormodule to sleep
+/// for saving precious power.
 class PowerManagement {
 	private:
 		ManchesterTransmitter & transmitter;

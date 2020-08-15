@@ -1,3 +1,5 @@
+/// @file
+
 #ifndef __CLIMATE_HPP
 #define __CLIMATE_HPP
 
@@ -9,6 +11,10 @@
 #define CLM_10MIN 600000
 #define CLM_15MIN 900000
 
+/// \brief
+/// Climate
+/// \details
+/// Handle everything that's got something to do with climate; temperature, humidity and pressure.
 class Climate {
 	private:
 		ForcedClimate & climateSensor;

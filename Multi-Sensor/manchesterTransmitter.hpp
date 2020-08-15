@@ -1,9 +1,15 @@
+/// @file
+
 #ifndef __MANCHESTER_TRANSMITTER_HPP
 #define __MANCHESTER_TRANSMITTER_HPP
 
 #include <Arduino.h>
 #include <Manchester.h>
 
+/// \brief
+/// ManchesterTransmitter
+/// \details
+/// Transmit all data according to the Manchester Standard.
 class ManchesterTransmitter {
 	private:
 		const uint8_t id;

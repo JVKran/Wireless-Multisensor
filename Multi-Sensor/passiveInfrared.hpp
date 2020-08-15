@@ -1,11 +1,14 @@
+/// @file
+
 #ifndef __PASSIVE_INFRARED_HPP
 #define __PASSIVE_INFRARED_HPP
 
-#include <Arduino.h>
-#include <Manchester.h>
-#include <avr/interrupt.h>
 #include "manchesterTransmitter.hpp"
 
+/// \brief
+/// Passive Infrared Sensor
+/// \details
+/// Notify when motion is detected.
 class PassiveInfrared {
 	private:
 		const uint8_t pin;

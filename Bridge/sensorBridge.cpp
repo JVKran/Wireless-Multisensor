@@ -1,3 +1,5 @@
+/// @file
+
 #include "sensorBridge.hpp"
 
 /// \brief

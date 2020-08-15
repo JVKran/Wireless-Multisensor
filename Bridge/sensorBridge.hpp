@@ -1,3 +1,5 @@
+/// @file
+
 #ifndef __SENSOR_BRIDGE_HPP
 #define __SENSOR_BRIDGE_HPP
 
