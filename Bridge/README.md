@@ -6,3 +6,8 @@ There are several ways to use this program. One can flash this code on an ESP-01
 
 ## Flashing
 Since there are an infinte amount of possibilities, I won't go through all required steps to upload the code. For a D1 Mini or NodeMCU V3 for example, it's just a matter of flashing it via USB while for an ESP-01, it's a matter of using an FTDI programmer. 
+
+What however is the same for all possible hardware/software combinations, is what libraries have to be installed. They are listed below.
+- [ESP8266WiFi](https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi); library needed for connection with Wifi-Network.
+- [PubSubClient](https://github.com/knolleary/pubsubclient); an MQTT-Client library.
+- [Manchester](https://github.com/mchr3k/arduino-libs-manchester); a Manchester Encoding library.
