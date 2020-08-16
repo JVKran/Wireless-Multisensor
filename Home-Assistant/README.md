@@ -6,4 +6,5 @@ For the Wireless-Multisensors to show up in Home-Assistant, one has to change th
 
 ### Lovelace UI
 <img src="/Documentation/Lovelace-Card.png" width=50% height=50% align="right">
+
 I trust most of you to know how to integrate the entities into the Lovelace UI but for starters there's an example in [lovelace.yaml](/Home-Assistant/lovelace.yaml); just copy and paste it in the code editor of a card like here. Since you could have multiple sensors, and every entity has got te be unique, the id of the sensor has to be part of the entity_id. While not so user friendly, it's the only option.
