@@ -1,0 +1,33 @@
+mqtt:
+  broker: 0.0.0.0
+  port: 1883
+  username: Home-Assistant
+  password: 1234
+
+sensor:
+  - platform: mqtt
+    state_topic: "/sensormodules/1/voltage"                     
+  - platform: mqtt
+    state_topic: "/sensormodules/1/temperature"
+    device_class: temperature
+  - platform: mqtt
+    state_topic: "/sensormodules/1/humidity"                                                                             
+    device_class: humidity                                                                                                                                   
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/pressure"                                                                               
+    device_class: pressure                                                                                                  
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/illuminance"                                                                            
+    device_class: illuminance 
+
+binary_sensor:
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/motion"
+    payload_on: "1"                                                                                                   
+    off_delay: 5                                                                                                            
+    device_class: "motion"
+  - platform: mqtt                                                                                                          
+    state_topic: "/sensormodules/1/reed"                                                                                    
+    payload_on: "0"                                                                                                         
+    payload_off: "1"
+    device_class: "door"  
