@@ -5,6 +5,5 @@ To be able to let the Wireless-Multisensors talk to, for example, Home-Assistant
 For the Wireless-Multisensors to show up in Home-Assistant, one has to change the configuration. The required code for configuring the Wireless Multisensor is verly limited and can be found in the [configuration.yaml](/Home-Assistant/configuration.yaml) file. It's just a matter of copy-paste. It is however, worth noticing that the id of the Wireless-Multisensor defines the topic the measurements are published on. Hence it's important to keep track of what id's are already in use. Two Wireless-Multisensors with the same id doesnt't mean they won't work anymore; they'll just end up as one sensor which isn't what we want.
 
 ### Lovelace UI
-I trust most of you to know how to integrate it into the Lovelace UI but for starters there's an example in [lovelace.yaml](/Home-Assistant/lovelace.yaml); just copy and paste it in a manual card.
-
-![Lovelace Card](/Documentation/Lovelace-Card.png "Lovelace Card")
+<img src="/Documentation/Lovelace-Card.png" width=50% height=50% align="right">
+I trust most of you to know how to integrate the entities into the Lovelace UI but for starters there's an example in [lovelace.yaml](/Home-Assistant/lovelace.yaml); just copy and paste it in the code editor of a card like here. Since you could have multiple sensors, and every entity has got te be unique, the id of the sensor has to be part of the entity_id. While not so user friendly, it's the only option.
