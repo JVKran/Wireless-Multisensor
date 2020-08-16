@@ -1,0 +1,11 @@
+entities:
+  - entity: binary_sensor.motion
+  - entity: binary_sensor.reed
+  - entity: sensor.temperature
+  - entity: sensor.humidity
+  - entity: sensor.pressure
+  - entity: sensor.illuminance
+  - entity: sensor.multisensor
+    icon: 'mdi:battery'
+    name: Voltage
+type: entities
