@@ -15,7 +15,6 @@ The codebase utilizes [SpenceKonde's ATTinyCore](https://github.com/SpenceKonde/
 - [Manchester](https://github.com/mchr3k/arduino-libs-manchester); a Manchester Encoding library.
 
 Once that's all downloaded and installed, one is almost ready to compile and flash the code. There are only a couple more settings to alter to make sure the mentioned battery life is possible and operation is stable.
-
 <img src="/Documentation/Flash-Settings.png" width=30% height=30% align="right">
 
 - ATtiny85 has got to be selected.
