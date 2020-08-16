@@ -22,4 +22,6 @@ Once that's all done, one is almost ready to compile and flash the code. There a
 - B.O.D. Level should be set at 1.8V
 - millis()/micros() should be disabled
 
-You're now ready to flash the code!
+<img src="/Documentation/Uno-Flash.png" width=30% height=30% align="right">
+
+You're now ready to flash the code! By uploading the Arduino ISP sketch to an Arduino UNO, wiring the ATtiny85V to the Arduino UNO as in this schematic and uploading the Multi-Sensor.ino to the port to which the Arduino UNO is connected, the ATtiny85V is flashed and ready to use!
