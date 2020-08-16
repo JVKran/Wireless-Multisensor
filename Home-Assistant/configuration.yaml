@@ -6,7 +6,8 @@ mqtt:
 
 sensor:
   - platform: mqtt
-    state_topic: "/sensormodules/1/voltage"                     
+    state_topic: "/sensormodules/1/voltage"   
+    name: "multisensor 1"
   - platform: mqtt
     state_topic: "/sensormodules/1/temperature"
     device_class: temperature
