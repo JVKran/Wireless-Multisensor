@@ -118,9 +118,9 @@ uint16_t PowerManagement::readVoltage(){
 }
 
 /// \brief
-/// Update
+/// Update Voltage
 /// \details
-/// Update value by taking a measurement when the updatePeriod has ended.
+/// Update value by taking a measurement at the configured interval.
 void PowerManagement::operator()(){
 	if(++lastUpdateCycles >= updateCycles){
 		lastUpdateCycles = 0;

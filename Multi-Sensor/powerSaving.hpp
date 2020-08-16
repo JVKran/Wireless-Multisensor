@@ -17,7 +17,7 @@
 #define PM_30MIN 1800000
 
 /// \brief
-/// PowerManagement
+/// Manage voltage updates and power saving.
 /// \details
 /// Handle updating the Battery Voltage and putting the sensormodule to sleep
 /// for saving precious power.

@@ -7,9 +7,9 @@
 #include <Manchester.h>
 
 /// \brief
-/// ManchesterTransmitter
+/// Transmit measurements.
 /// \details
-/// Transmit all data according to the Manchester Standard.
+/// Transmit data when Climate, Light, Reed, PassiveInfrared, Reed or PowerManagement has measured a new value.
 class ManchesterTransmitter {
 	private:
 		const uint8_t id;

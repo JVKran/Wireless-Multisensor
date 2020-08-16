@@ -6,9 +6,9 @@
 #include "manchesterTransmitter.hpp"
 
 /// \brief
-/// Reed Switch
+/// Detect state of switch.
 /// \details
-/// Notify when state has changed.
+/// Notify when state has changed from LOW to HIGH or vice versa.
 class Reed {
 	private:
 		const uint8_t pin;

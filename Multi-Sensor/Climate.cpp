@@ -16,9 +16,9 @@ Climate::Climate(ForcedClimate & climateSensor, ManchesterTransmitter & transmit
 {}
 
 /// \brief
-/// Update
+/// Update Values
 /// \details
-/// Update values by taking a measurement when the updatePeriod has ended.
+/// Update values by taking a measurement at the configured interval.
 void Climate::operator()(){
 	if(++lastUpdateCycles >= updateCycles){
 		climateSensor.takeForcedMeasurement();

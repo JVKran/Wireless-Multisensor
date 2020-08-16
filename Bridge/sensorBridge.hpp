@@ -7,14 +7,14 @@
 #define BUFFER_SIZE 16
 
 /// \brief 
-/// SensorListener
+/// Listen for messages from SensorBridge
 /// \details
 /// Inherit from this class and override the given abstract function to be notified when 
 /// data is received. This can be done like in the example underneath.
 /// 
 /// ~~~~~~~~~~~~~~~{.hpp}
 /// 
-/// class alarm : public sensorListener {
+/// class alarmSystem : public sensorListener {
 ///        private:
 ///            void fire(){
 ///                // Do something; blink led, buzz buzzer, etc.
@@ -26,6 +26,18 @@
 ///                }
 ///            }
 /// };
+/// 
+/// SensorBridge sensorBridge = SensorBridge();
+/// alarmSystem alarm = alarmSystem();
+/// 
+/// void setup() {
+///     sensorBridge.addListener(alarm);
+/// }
+///
+/// void loop() {
+///     sensorBridge();
+/// }
+///
 /// ~~~~~~~~~~~~~~~
 class SensorListener {
 	public:
@@ -45,14 +57,14 @@ class SensorListener {
 };
 
 /// \brief 
-/// SensorBridge
+/// Listen for messages from Wireless-Multisensors.
 /// \details
 /// This class forms a bridge between the Wireless Sensor module and the MQTT client.
 /// It receives, processes and forwards the messages received from the sensor module.
 /// 
 /// ~~~~~~~~~~~~~~~{.hpp}
 /// 
-/// class alarm : public sensorListener {
+/// class alarmSystem : public sensorListener {
 ///        private:
 ///            void fire(){
 ///                // Do something; blink led, buzz buzzer, etc.
@@ -64,6 +76,18 @@ class SensorListener {
 ///                }
 ///            }
 /// };
+/// 
+/// SensorBridge sensorBridge = SensorBridge();
+/// alarmSystem alarm = alarmSystem();
+/// 
+/// void setup() {
+///     sensorBridge.addListener(alarm);
+/// }
+///
+/// void loop() {
+///     sensorBridge();
+/// }
+///
 /// ~~~~~~~~~~~~~~~
 class SensorBridge {
 	private:

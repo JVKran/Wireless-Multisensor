@@ -25,9 +25,9 @@ void Light::begin(){
 }
 
 /// \brief
-/// Update
+/// Update Value
 /// \details
-/// Update value by taking a measurement when the updatePeriod has ended.
+/// Update value by taking a measurement at the configured interval.
 void Light::operator()(){
 	if(++lastUpdateCycles >= updateCycles){
 		transmitter.updateLightIntensity(lightSensor.getLightIntensity());

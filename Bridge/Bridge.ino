@@ -2,13 +2,13 @@
 #include "mqttClient.hpp"
 #include "sensorBridge.hpp"
 
-// /* Replace these with your own credentials and then uncomment.
-//    Has been commented so you get a compile error when you forget.
+/* Replace these with your own credentials and then uncomment.
+   Has been commented so you get a compile error when you forget ;)
 #define SSID "SSID"
 #define WPA "WPA2"
 #define BROKER "0.0.0.0"
 #define TOPIC "/raspberry/home-assistant"
-//*/
+*/
 
 WiFiClient espClient;                   // Can also be passed to other instances.
 mqttClient client(SSID, WPA, BROKER, TOPIC, espClient);

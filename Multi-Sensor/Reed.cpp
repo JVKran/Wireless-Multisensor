@@ -35,7 +35,7 @@ void Reed::sensedChange(){
 }
 
 /// \brief
-/// Update
+/// Update State
 /// \details
 /// If an interrupt could have occured, measure the state of the pin.
 /// When high, notify the transmitter that motion has been detected.

@@ -72,7 +72,7 @@ void mqttClient::setupWifi() {
 /// \brief
 /// Connect to MQTT-Broker
 /// \details
-/// Connect to the MQTT-Broker with the given ip.
+/// Connect to the MQTT-Broker with the given ip, subscribe to the desired topic and enable callback.
 void mqttClient::setupConnections(){
     client.setServer(mqttServer, 1883);
     client.setCallback(callback);
@@ -121,9 +121,9 @@ void mqttClient::sendMessage(const char* topic, const char* messageToSend){
 }
 
 /// \brief
-/// Receive Data
+/// Publish data from SensorBridge.
 /// \details
-/// Read the received data..
+/// Publish the from the SensorBridge received data.
 /// \param sensorId The id of the sensor that sent the received message.
 /// \param motion Wether or not there was motion detected.
 /// \param reedState The state of the switch.

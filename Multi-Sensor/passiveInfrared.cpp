@@ -33,7 +33,7 @@ void PassiveInfrared::sensedMotion(){
 }
 
 /// \brief
-/// Update
+/// Update Motion
 /// \details
 /// If an interrupt could have occured, measure the state of the pin.
 /// When high, notify the transmitter that motion has been detected.

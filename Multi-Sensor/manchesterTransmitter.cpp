@@ -22,9 +22,9 @@ void ManchesterTransmitter::begin(const uint8_t transmitPin, const uint8_t baudr
 }
 
 /// \brief
-/// Update
+/// Transmit data when changes have occured.
 /// \details
-/// Transmit data if it has been changed since last transmission.
+/// When at least one value changed since the last transmission, all values are transmitted.
 void ManchesterTransmitter::operator()(){
 	if(dataChanged){
 		transmitData();
@@ -49,7 +49,7 @@ void ManchesterTransmitter::transmitData(){
 }
 
 /// \brief
-/// Update Motion
+/// Notify Motion
 void ManchesterTransmitter::updateMotion(){
 	lastMotion = true;
 	dataChanged = true;

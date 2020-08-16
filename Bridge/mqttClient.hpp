@@ -9,14 +9,14 @@
 #include "sensorBridge.hpp"
 
 /// \brief 
-/// messageListener
+/// Listen for MQTT-Messages
 /// \details
 /// Inherit from this class and override the given abstract function to be notified when a 
 /// message is received. This can be done like in the example underneath.
 /// 
-/// ~~~~~~~~~~~~~~~{.hpp}
+/// ~~~~~~~~~~~~~~~{.cpp}
 /// 
-/// class alarm : public messageListener {
+/// class alarmSystem : public messageListener {
 ///        private:
 ///            void armAway(){
 ///                // Do something.
@@ -30,6 +30,24 @@
 ///                }
 ///            }
 /// };
+///
+/// WiFiClient espClient;
+/// mqttClient client(SSID, WPA, BROKER, TOPIC, espClient);
+/// alarmSystem alarm = alarmSystem();
+/// 
+/// void setup() {
+///     client.begin();
+///     client.setupWifi();                 // Connect to Network
+///     client.setupConnections();          // Connect to Broker
+///
+///     client.addListener(alarm);
+/// }
+///
+/// void loop() {
+///     client(); 
+/// }
+///
+///
 /// ~~~~~~~~~~~~~~~
 class messageListener {
     public:
@@ -39,7 +57,7 @@ class messageListener {
 void callback(char* topic, byte* payload, unsigned int length);
 
 /// \brief 
-/// mqttClient
+/// Client for MQTT-Broker.
 /// \details
 /// Handles everything that should be handled for the use of MQTT (Message Queue Telemetry Transport).
 /// Has functions for keeping the connection active, connecting to a network, subscribing to topics,

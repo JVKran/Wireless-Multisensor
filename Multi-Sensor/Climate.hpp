@@ -12,9 +12,10 @@
 #define CLM_15MIN 900000
 
 /// \brief
-/// Climate
+/// Temperature, Humidity and Pressure measurements.
 /// \details
-/// Handle everything that's got something to do with climate; temperature, humidity and pressure.
+/// Responsible for letting the BME280 take measurements at the interval it's supposed to make measurements at.
+/// After that's been done, the ManchesterTransmitter is notified about a change.
 class Climate {
 	private:
 		ForcedClimate & climateSensor;

@@ -53,7 +53,7 @@ ForcedClimate bme = ForcedClimate(TinyWireM, 0x76, false);
 Climate climate = Climate(bme, transmitter, CLM_15MIN);
 
 BH1750 lightSensor = BH1750();
-Light light = Light(lightSensor, transmitter, LHT_5MIN);
+Light light = Light(lightSensor, transmitter, LHT_15MIN);
 
 ISR(PCINT0_vect){
 	cli();						// Disable interrupts to prevent bouncing.

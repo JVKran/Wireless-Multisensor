@@ -6,9 +6,9 @@
 #include "manchesterTransmitter.hpp"
 
 /// \brief
-/// Passive Infrared Sensor
+/// Detects motion
 /// \details
-/// Notify when motion is detected.
+/// Notify ManchesterTransmitter when motion has been detected.
 class PassiveInfrared {
 	private:
 		const uint8_t pin;
