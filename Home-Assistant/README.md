@@ -6,3 +6,5 @@ For the Wireless-Multisensors to show up in Home-Assistant, one has to change th
 
 ### Lovelace UI
 I trust most of you to know how to integrate it into the Lovelace UI but for starters there's an example in [lovelace.yaml](/Home-Assistant/lovelace.yaml); just copy and paste it in a manual card.
+
+![Lovelace Card](/Documenation/Lovelace-Card.png "Lovelace Card")
