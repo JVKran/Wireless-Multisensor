@@ -20,36 +20,3 @@ Last but not least the Multisensor is also equipped with a BH1750 to measure ill
 
 ### Years of worryless use
 The ATtiny85V with a minimum voltage of 1.7V and a clock set at 1MHz paired with the abovely mentioned components and some very efficient libraries, results in a current draw of 52uA. Based on a 1500mAh CR123A this means the battery has got to be changed every (1500mAh / 0.052 =) 28800 hours or 1200 days or 3.3 years!
-
-## Home-Assistant
-To be able to let the Wireless-Multisensors talk to, for example, Home-Assistant, one would need to use the Bridge to 'bridge' the 433MHz messages to MQTT. This can be done by using the code in the [Bridge Directory](/Bridge). Further information can also be found there. It boils down to two possibilities; using a dedicated ESP or letting the code run on an already in use ESP. Anyhow, the code is the same. The id of the Wireless-Multisensor defines the topic the measurements are published on. Hence it's important to keep track of what id's are already in use. Two Wireless-Multisensors with the same id doesnt't mean they won't work anymore; they'll just end up as one sensor which isn't what we want.
-
-```yaml
-sensor:
-  - platform: mqtt
-    state_topic: "/sensormodules/1/voltage"                     
-  - platform: mqtt
-    state_topic: "/sensormodules/1/temperature"
-    device_class: temperature
-  - platform: mqtt
-    state_topic: "/sensormodules/1/humidity"                                                                             
-    device_class: humidity                                                                                                                                   
-  - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/pressure"                                                                               
-    device_class: pressure                                                                                                  
-  - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/illuminance"                                                                            
-    device_class: illuminance 
-
-binary_sensor:
-  - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/motion"
-    payload_on: "1"                                                                                                   
-    off_delay: 5                                                                                                            
-    device_class: "motion"
-  - platform: mqtt                                                                                                          
-    state_topic: "/sensormodules/1/reed"                                                                                    
-    payload_on: "0"                                                                                                         
-    payload_off: "1"
-    device_class: "door"                                                       
-```
