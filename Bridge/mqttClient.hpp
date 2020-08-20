@@ -3,10 +3,15 @@
 #ifndef __CONNECTIONS_HPP
 #define __CONNECTIONS_HPP
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-#include "sensorBridge.hpp"
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+
+#include "Memory.hpp"
+#include "SensorBridge.hpp"
+#include "Webpage.hpp"
 
 /// \brief 
 /// Listen for MQTT-Messages
@@ -88,12 +93,13 @@ void callback(char* topic, byte* payload, unsigned int length);
 ///     client();                           // Keep connections active and listen for messages
 /// }
 /// ~~~~~~~~~~~~~~~
-class mqttClient : public SensorListener {
+class MqttClient : public SensorListener {
     private:
         // For connection with network
-        char* ssid;
-        char* password;
-        char* mqttServer;
+        String ssid;
+        String wpa;
+        String mqttServer;
+        bool credentialsChanged = false;
 
         // For connection with MQTT-Broker
         const char* clientName;
@@ -104,12 +110,24 @@ class mqttClient : public SensorListener {
         PubSubClient client;
         const bool retainedMessages;
         const uint8_t qosLevel;
+
+        AsyncWebServer server = AsyncWebServer(80);
+        bool connected = false;
         
         // Listeners to notify on reception of MQTT Message
         messageListener * listeners[20] = {};
         uint8_t amountOfListeners = 0;
+
+        Memory memory = Memory();
+
+        enum class addresses {
+            ssid = 0,
+            wpa = 64,
+            ip = 128
+        };
+
     public:
-        mqttClient(char* ssid, char* password, char* mqttServer, const char* topic, WiFiClient & espClient, const char* clientName = "SensorBridge", const char* clientPassword = "BridgePass", const bool retainedMessages = true, const uint8_t qosLevel = 1);
+        MqttClient(char* ssid, char* wpa, char* mqttServer, const char* topic, WiFiClient & espClient, const char* clientName = "SensorBridge", const char* clientPassword = "BridgePass", const bool retainedMessages = true, const uint8_t qosLevel = 1);
         void begin();
 
         void addListener(messageListener & listener);
@@ -118,6 +136,7 @@ class mqttClient : public SensorListener {
         void setupWifi();
         void setupConnections();
         void reconnect();
+        bool connectionEstablished();
 
         void operator()();
         void sendMessage(const char* topic, const char* messageToSend);

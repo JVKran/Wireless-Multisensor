@@ -1,17 +1,15 @@
 #include <ESP8266WiFi.h>
-#include "mqttClient.hpp"
-#include "sensorBridge.hpp"
+#include "MqttClient.hpp"
+#include "SensorBridge.hpp"
 
-/* Replace these with your own credentials and then uncomment.
-   Has been commented so you get a compile error when you forget ;)
-#define SSID "SSID"
-#define WPA "WPA2"
-#define BROKER "0.0.0.0"
-#define TOPIC "/raspberry/home-assistant"
-*/
+// Can be left blank for wireless setup; only interesting for the ones that are embedding the code in an already existing project.
+#define SSID ""
+#define WPA ""
+#define BROKER ""
+#define TOPIC "/raspberrypi/homeassistant"
 
 WiFiClient espClient;                   // Can also be passed to other instances.
-mqttClient client(SSID, WPA, BROKER, TOPIC, espClient);
+MqttClient client(SSID, WPA, BROKER, TOPIC, espClient);
 SensorBridge sensorBridge = SensorBridge();
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -24,9 +22,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void setup() {
+    Serial.begin(9600);
     client.begin();
-    client.setupWifi();                 // Connect to Network
-    client.setupConnections();          // Connect to Broker
 
     sensorBridge.begin(3, MAN_2400);
 	sensorBridge.addListener(client);   // Let client listen to sensor readings
@@ -34,5 +31,5 @@ void setup() {
 
 void loop() {
     client();                           // Handle incoming sensor readings and publish them
-    sensorBridge();                     // Handle incoming transmissions from Wireless Multi-Sensors.
+    sensorBridge();                     // Handle incoming transmissions from Wireless Multi-Sensors.   
 }
