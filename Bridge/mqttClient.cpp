@@ -29,7 +29,9 @@ MqttClient::MqttClient(char* ssid, char* wpa, char* mqttServer, const char* topi
 /// \brief
 /// Begin Instance
 /// \details
-/// Begin the MqttClient instance by setting the WiFi-Mode to Station.
+/// Begin the MqttClient instance by checking wether or not there are valid credentials in the EEPROM memory.
+/// If there are, Station Mode is activated and operation is as normals. When there aren't, Access Point Mode is activated
+/// and nothing will be done until valid credentials have been entered.
 void MqttClient::begin(){
     memory.begin(512);
     delay(1000);
@@ -60,20 +62,6 @@ void MqttClient::begin(){
         Serial.println("Station Mode activated.");
     }
     Serial.println();
-
-    // if(!SPIFFS.begin()){
-    //     Serial.println("SPIFFS failed!");
-    //     return;
-    // }
-
-    // server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    //     request->send(SPIFFS, "/index.html", String(), false);
-    // });
-
-    // server.on("/stylesheet.css", HTTP_GET, [](AsyncWebServerRequest *request){
-    //     request->send(SPIFFS, "/stylesheet.css", "text/css");
-    // });
-
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send_P(200, "text/html", index_html);
@@ -106,9 +94,7 @@ void MqttClient::begin(){
 
     if(ssid != "" && wpa != ""){
         setupWifi();
-        if(connected){
-            setupConnections();
-        }
+        setupConnections();
     }
 }
 
@@ -166,10 +152,12 @@ void MqttClient::setupWifi() {
 /// \details
 /// Connect to the MQTT-Broker with the given ip, subscribe to the desired topic and enable callback.
 void MqttClient::setupConnections(){
-    client.setServer(mqttServer.c_str(), 1883);
-    client.setCallback(callback);
-    client.subscribe(topic, qosLevel);
-    reconnect(); 
+    if(connected){
+        client.setServer(mqttServer.c_str(), 1883);
+        client.setCallback(callback);
+        client.subscribe(topic, qosLevel);
+        reconnect();    
+    }
 }
 
 /// \brief
