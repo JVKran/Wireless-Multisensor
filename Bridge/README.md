@@ -7,7 +7,7 @@ There are several ways to use this program. One can flash this code on an ESP-01
 If you're not, and just want to use this code as-is, it's a lot easier to setup. Just flash the code on your desired microcontroller (ESP-01, D1 Mini, NodeMCU V3, etc.), connect to the 'Wireless-Multisensor Bridge' Acces-Point, navigate to '192.168.4.1' and enter your credentials. This is a one-time process; after this is done, the credentials will be stored in the EEPROM. For the more visual people, I also made a [video](https://youtu.be/CQGhy87DgMU) on how to set it up.
 
 ## Flashing
-Since there are an infinte amount of possibilities, I won't go through all required steps to upload the code. For a D1 Mini or NodeMCU V3 for example, it's just a matter of flashing it via USB while for an ESP-01, it's a matter of using an FTDI programmer. 
+Since there are is infinte amount of possible mirocontrollers, I won't go through all required steps to upload the code. For a D1 Mini or NodeMCU V3 for example, it's just a matter of flashing it via USB while for an ESP-01, it's a matter of using an FTDI programmer. 
 
 What however is the same for all possible hardware/software combinations, is what libraries have to be installed. They are listed below.
 - [ESP8266WiFi](https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi); library needed for connection with Wifi-Network.
